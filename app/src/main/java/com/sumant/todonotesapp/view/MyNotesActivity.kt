@@ -1,4 +1,4 @@
-package com.sumant.todonotesapp
+package com.sumant.todonotesapp.view
 
 import android.content.Context
 import android.content.Intent
@@ -15,9 +15,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.sumant.todonotesapp.NotesApp
+import com.sumant.todonotesapp.utils.AppConstrain
+import com.sumant.todonotesapp.utils.PrefConstant
+import com.sumant.todonotesapp.R
 import com.sumant.todonotesapp.adapter.NotesAdapter
 import com.sumant.todonotesapp.clickListener.ItemClickListener
-import com.sumant.todonotesapp.model.Notes
+import com.sumant.todonotesapp.db.Notes
 import java.util.*
 
 class MyNotesActivity : AppCompatActivity() {
@@ -30,10 +34,16 @@ class MyNotesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_notes)
+
         bindViews()
         setupSharedPref()
         intentData
-        fullNameTv.text = fullName
+        clickListeners()
+        getDatafromDB()
+        setupRecyclerView()
+    }
+
+    private fun clickListeners() {
         floatingActionButton.setOnClickListener { setupDialogBox() }
     }
 
@@ -43,6 +53,7 @@ class MyNotesActivity : AppCompatActivity() {
             if (TextUtils.isEmpty(fullName)) {
                 fullName = sharedPreferences!!.getString(PrefConstant.FULL_NAME, "")
             }
+            fullNameTv.text = fullName
         }
 
     private fun bindViews() {
@@ -64,16 +75,31 @@ class MyNotesActivity : AppCompatActivity() {
                 .setView(view)
                 .create()
         alertDialog.show()
+
         submitButton.setOnClickListener {
             val title = titleEditText.text.toString()
             val description = descriptionEditText.text.toString()
             if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description)) {
-                val notes = Notes(title, description)
+                val notes = Notes(title = title, description = description)
                 notesList.add(notes)
-                setupRecyclerView()
+                addNotesToDB(notes)
+
             } else Toast.makeText(this@MyNotesActivity, "Title and Description can't be empty", Toast.LENGTH_SHORT).show()
             alertDialog.hide()
+
         }
+    }
+
+    private fun getDatafromDB() {
+        val notesApp = applicationContext as NotesApp
+        val notesDao = notesApp.getNotesDB().notesDao()
+        notesList.addAll( notesDao.getAllNotes() )
+    }
+
+    private fun addNotesToDB(notes: Notes) {
+        val notesApp = applicationContext as NotesApp
+        val notesDao = notesApp.getNotesDB().notesDao()
+        notesDao.insert(notes)
     }
 
     private fun setupRecyclerView() {
@@ -84,11 +110,18 @@ class MyNotesActivity : AppCompatActivity() {
                 intent.putExtra(AppConstrain.DESCRIPTION, notes.description)
                 startActivity(intent)
             }
+
+            override fun onUpdate(notes: Notes) {
+                val notesApp = applicationContext as NotesApp
+                val notesDao = notesApp.getNotesDB().notesDao()
+                notesDao.insert(notes)
+            }
         }
         val notesAdapter = NotesAdapter(notesList, itemClickListener)
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         notesRv!!.layoutManager = linearLayoutManager
         notesRv!!.adapter = notesAdapter
+
     }
 }

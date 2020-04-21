@@ -1,4 +1,4 @@
-package com.sumant.todonotesapp
+package com.sumant.todonotesapp.utils
 
 object PrefConstant {
     @JvmField

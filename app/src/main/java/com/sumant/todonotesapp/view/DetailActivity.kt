@@ -1,8 +1,10 @@
-package com.sumant.todonotesapp
+package com.sumant.todonotesapp.view
 
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.sumant.todonotesapp.utils.AppConstrain
+import com.sumant.todonotesapp.R
 
 class DetailActivity : AppCompatActivity() {
     var titleTextView: TextView? = null

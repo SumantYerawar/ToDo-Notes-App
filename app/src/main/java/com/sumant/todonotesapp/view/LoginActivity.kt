@@ -1,4 +1,4 @@
-package com.sumant.todonotesapp
+package com.sumant.todonotesapp.view
 
 import android.content.Context
 import android.content.Intent
@@ -10,6 +10,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.sumant.todonotesapp.utils.AppConstrain
+import com.sumant.todonotesapp.utils.PrefConstant
+import com.sumant.todonotesapp.R
 
 class LoginActivity : AppCompatActivity() {
     private var usernameEditText: EditText? = null
