@@ -56,7 +56,7 @@ class MyNotesActivity : AppCompatActivity() {
     private fun setupWorkManager() {
         val constraint = Constraints.Builder()
                 .build()
-        val request = PeriodicWorkRequest.Builder(MyWorker::class.java, 2, TimeUnit.MINUTES)
+        val request = PeriodicWorkRequest.Builder(MyWorker::class.java, 15, TimeUnit.MINUTES)
                 .setConstraints(constraint)
                 .build()
         WorkManager.getInstance(this).enqueue(request)
@@ -158,8 +158,8 @@ class MyNotesActivity : AppCompatActivity() {
 //            val note = Notes(title = title!!, desp = descp!!, imagePath = imagePath!!)
             val notes = Notes(title = title!!, description =  description!!, imagePath = imagePath!!)
             addNotesToDB(notes)
-            notesRv.adapter?.notifyItemChanged( notesList.size - 1)
             notesList.add(notes)
+            notesRv.adapter?.notifyItemChanged( notesList.size - 1)
         }
     }
 }

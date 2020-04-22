@@ -6,6 +6,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.sumant.todonotesapp.utils.PrefConstant
 import com.sumant.todonotesapp.R
 
@@ -15,7 +17,24 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         setupSharedPref()
+        getFCMToken()
         Handler().postDelayed({ checkLoginStatus() }, SPLASH_TIME_OUT.toLong())
+    }
+
+    private fun getFCMToken() {
+        FirebaseInstanceId.getInstance().instanceId
+                .addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        return@OnCompleteListener
+                    }
+
+                    // Get new Instance ID token
+                    val token = task.result?.token
+
+                    // Log and toast
+                    //val msg = getString(R.string.msg_token_fmt, token)
+                    //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                })
     }
 
     private fun setupSharedPref() {

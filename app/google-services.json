@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "160759955534",
+    "firebase_url": "https://todo-notes-app-4dbe0.firebaseio.com",
+    "project_id": "todo-notes-app-4dbe0",
+    "storage_bucket": "todo-notes-app-4dbe0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160759955534:android:4af9f0e76406c46fb3031f",
+        "android_client_info": {
+          "package_name": "com.sumant.todonotesapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160759955534-1k59mq44iob7ku4m3hemikmfb0e1qudu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzvBFKG2PZB7rCSPK75WjAfRJrtHaL4VM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160759955534-1k59mq44iob7ku4m3hemikmfb0e1qudu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
