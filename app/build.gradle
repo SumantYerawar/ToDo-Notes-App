@@ -54,4 +54,7 @@ dependencies {
 
     //workManager
     implementation "androidx.work:work-runtime-ktx:2.3.4"
+
+    //networking
+    implementation 'com.amitshekhar.android:android-networking:1.0.2'
 }
