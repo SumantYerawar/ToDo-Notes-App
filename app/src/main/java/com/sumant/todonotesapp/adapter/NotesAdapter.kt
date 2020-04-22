@@ -5,8 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.sumant.todonotesapp.R
 import com.sumant.todonotesapp.clickListener.ItemClickListener
 import com.sumant.todonotesapp.db.Notes
@@ -23,6 +25,7 @@ class NotesAdapter(private val notesList: List<Notes>, private val itemClickList
         holder.titleTV.text = notes.title
         holder.descriptionTV.text = notes.description
         holder.checkBoxCompleteStatus.isChecked = notes.isTaskCompleted
+        Glide.with(holder.itemView).load(notes.imagePath).into(holder.imageView)
 
         holder.itemView.setOnClickListener(object : View.OnClickListener{
             override fun onClick(p0: View?) {
@@ -48,6 +51,7 @@ class NotesAdapter(private val notesList: List<Notes>, private val itemClickList
         val titleTV: TextView = itemView.findViewById(R.id.titleTextView)
         val descriptionTV: TextView = itemView.findViewById(R.id.descriptionTextView)
         val checkBoxCompleteStatus : CheckBox = itemView.findViewById(R.id.completeStatus)
+        val imageView : ImageView = itemView.findViewById(R.id.imageView);
 
     }
 

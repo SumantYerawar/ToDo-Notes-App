@@ -14,15 +14,20 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.Constraints
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sumant.todonotesapp.NotesApp
-import com.sumant.todonotesapp.utils.AppConstrain
+import com.sumant.todonotesapp.utils.AppConstants
 import com.sumant.todonotesapp.utils.PrefConstant
 import com.sumant.todonotesapp.R
 import com.sumant.todonotesapp.adapter.NotesAdapter
 import com.sumant.todonotesapp.clickListener.ItemClickListener
 import com.sumant.todonotesapp.db.Notes
+import com.sumant.todonotesapp.workManager.MyWorker
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MyNotesActivity : AppCompatActivity() {
     private lateinit var fullNameTv: TextView
@@ -31,6 +36,10 @@ class MyNotesActivity : AppCompatActivity() {
     var fullName: String? = null
     private lateinit var notesRv: RecyclerView
     var notesList = ArrayList<Notes>()
+
+    private val ADD_NOTES_CODE = 100
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_notes)
@@ -38,18 +47,31 @@ class MyNotesActivity : AppCompatActivity() {
         bindViews()
         setupSharedPref()
         intentData
-        clickListeners()
         getDatafromDB()
+        clickListeners()
         setupRecyclerView()
+        setupWorkManager()
+    }
+
+    private fun setupWorkManager() {
+        val constraint = Constraints.Builder()
+                .build()
+        val request = PeriodicWorkRequest.Builder(MyWorker::class.java, 2, TimeUnit.MINUTES)
+                .setConstraints(constraint)
+                .build()
+        WorkManager.getInstance(this).enqueue(request)
     }
 
     private fun clickListeners() {
-        floatingActionButton.setOnClickListener { setupDialogBox() }
+        floatingActionButton.setOnClickListener {
+            val intent = Intent(this, AddNotesActivity::class.java)
+            startActivityForResult(intent, ADD_NOTES_CODE)
+        }
     }
 
     private val intentData: Unit
         private get() {
-            fullName = intent.getStringExtra(AppConstrain.Full_Name)
+            fullName = intent.getStringExtra(AppConstants.Full_Name)
             if (TextUtils.isEmpty(fullName)) {
                 fullName = sharedPreferences!!.getString(PrefConstant.FULL_NAME, "")
             }
@@ -82,6 +104,7 @@ class MyNotesActivity : AppCompatActivity() {
             if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description)) {
                 val notes = Notes(title = title, description = description)
                 notesList.add(notes)
+                notesRv.adapter?.notifyItemChanged( notesList.size - 1)
                 addNotesToDB(notes)
 
             } else Toast.makeText(this@MyNotesActivity, "Title and Description can't be empty", Toast.LENGTH_SHORT).show()
@@ -106,8 +129,8 @@ class MyNotesActivity : AppCompatActivity() {
         val itemClickListener: ItemClickListener = object : ItemClickListener {
             override fun onClick(notes: Notes?) {
                 val intent = Intent(this@MyNotesActivity, DetailActivity::class.java)
-                intent.putExtra(AppConstrain.TITLE, notes!!.title)
-                intent.putExtra(AppConstrain.DESCRIPTION, notes.description)
+                intent.putExtra(AppConstants.TITLE, notes!!.title)
+                intent.putExtra(AppConstants.DESCRIPTION, notes.description)
                 startActivity(intent)
             }
 
@@ -123,5 +146,20 @@ class MyNotesActivity : AppCompatActivity() {
         notesRv!!.layoutManager = linearLayoutManager
         notesRv!!.adapter = notesAdapter
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == ADD_NOTES_CODE){
+            val title = data?.getStringExtra(AppConstants.TITLE)
+            val description = data?.getStringExtra(AppConstants.DESCRIPTION)
+            val imagePath = data?.getStringExtra(AppConstants.IMAGE_PATH)
+
+//            val note = Notes(title = title!!, desp = descp!!, imagePath = imagePath!!)
+            val notes = Notes(title = title!!, description =  description!!, imagePath = imagePath!!)
+            addNotesToDB(notes)
+            notesRv.adapter?.notifyItemChanged( notesList.size - 1)
+            notesList.add(notes)
+        }
     }
 }

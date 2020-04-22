@@ -10,7 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.sumant.todonotesapp.utils.AppConstrain
+import com.sumant.todonotesapp.utils.AppConstants
 import com.sumant.todonotesapp.utils.PrefConstant
 import com.sumant.todonotesapp.R
 
@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
             val userName = usernameEditText!!.text.toString()
             if (!TextUtils.isEmpty(fullName) && !TextUtils.isEmpty(userName)) {
                 val intent = Intent(applicationContext, MyNotesActivity::class.java)
-                intent.putExtra(AppConstrain.Full_Name, fullName)
+                intent.putExtra(AppConstants.Full_Name, fullName)
                 startActivity(intent)
                 saveLoginStatus()
                 saveFullName(fullName)
