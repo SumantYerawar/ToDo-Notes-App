@@ -19,6 +19,7 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintStart_toEndOf="@id/completeStatus"
             app:layout_constraintTop_toTopOf="parent"
