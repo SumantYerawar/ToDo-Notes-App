@@ -166,4 +166,10 @@ class AddNotesActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this,MyNotesActivity::class.java)
+        startActivity(intent)
+    }
 }

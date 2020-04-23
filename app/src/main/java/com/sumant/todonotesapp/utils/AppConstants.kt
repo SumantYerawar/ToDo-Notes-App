@@ -2,7 +2,7 @@ package com.sumant.todonotesapp.utils
 
 object AppConstants {
     @JvmField
-    val Full_Name = "fullName"
+    val FULL_NAME= "fullName"
     @JvmField
     val TITLE = "title"
     @JvmField

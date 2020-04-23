@@ -10,20 +10,32 @@
         android:id="@+id/titleToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:textSize="48sp"
-            android:padding="10dp"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
+            android:layout_margin="10dp"
             android:gravity="center"
-            android:layout_margin="10dp"/>
+            android:padding="10dp"
+            android:text="@string/login"
+            android:textColor="@color/colorPrimary"
+            android:textSize="48sp" />
 
     </androidx.appcompat.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/ic_ogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleToolbar" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/fullNameTextField"
@@ -31,11 +43,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="15dp"
         android:hint="@string/full_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleToolbar">
+        app:layout_constraintTop_toBottomOf="@+id/imageView3">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fullNameEditText"
@@ -67,14 +79,14 @@
         style="@style/TextAppearance.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
         android:background="@color/colorPrimary"
         android:text="@string/login"
-        android:layout_marginTop="290dp"
         android:textColor="#fff"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/usernameTextField"
-        app:layout_constraintStart_toStartOf="@+id/usernameTextField"
-        app:layout_constraintTop_toBottomOf="@+id/usernameTextField" />
+        app:layout_constraintStart_toStartOf="@+id/usernameTextField" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

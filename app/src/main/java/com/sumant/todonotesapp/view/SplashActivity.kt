@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.sumant.todonotesapp.utils.PrefConstant
 import com.sumant.todonotesapp.R
+import com.sumant.todonotesapp.onBoarding.OnBoardingActivity
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
@@ -42,13 +43,19 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun checkLoginStatus() {
-        val isLoggedIn = sharedPreferences!!.getBoolean(PrefConstant.IS_LOGGED_IN, false)
+        val isLoggedIn = sharedPreferences.getBoolean(PrefConstant.IS_LOGGED_IN, false)
+        val isBoardingSuccess = sharedPreferences.getBoolean(PrefConstant.ON_BOARDED_SUCCESSFULLY,false)
         if (isLoggedIn) {
             val intent = Intent(this@SplashActivity, MyNotesActivity::class.java)
             startActivity(intent)
         } else {
-            val intent = Intent(this@SplashActivity, LoginActivity::class.java)
-            startActivity(intent)
+            if (isBoardingSuccess) {
+                val intent = Intent(this@SplashActivity, LoginActivity::class.java)
+                startActivity(intent)
+            }else{
+                val intent = Intent(this@SplashActivity, OnBoardingActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 

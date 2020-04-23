@@ -3,15 +3,14 @@ package com.sumant.todonotesapp.view
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.opengl.Visibility
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,9 +31,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MyNotesActivity : AppCompatActivity() {
-    private lateinit var fullNameTv: TextView
+
     private lateinit var floatingActionButton: FloatingActionButton
-    var sharedPreferences: SharedPreferences? = null
+    private lateinit var sharedPreferences: SharedPreferences
     var fullName: String? = null
     private lateinit var notesRv: RecyclerView
     var notesList = ArrayList<Notes>()
@@ -48,11 +47,23 @@ class MyNotesActivity : AppCompatActivity() {
 
         bindViews()
         setupSharedPref()
-        intentData
+        getIntentData()
         getDatafromDB()
         clickListeners()
         setupRecyclerView()
         setupWorkManager()
+
+        supportActionBar?.setTitle( fullName)
+    }
+
+    private fun getIntentData() {
+        val intent = intent
+        if (intent.hasExtra(AppConstants.FULL_NAME)) {
+            fullName = intent.getStringExtra(AppConstants.FULL_NAME)
+        }
+        if (fullName.isNullOrBlank()) {
+            fullName = sharedPreferences?.getString(PrefConstant.FULL_NAME, "")!!
+        }
     }
 
     private fun setupWorkManager() {
@@ -71,48 +82,13 @@ class MyNotesActivity : AppCompatActivity() {
         }
     }
 
-    private val intentData: Unit
-        private get() {
-            fullName = intent.getStringExtra(AppConstants.Full_Name)
-            if (TextUtils.isEmpty(fullName)) {
-                fullName = sharedPreferences!!.getString(PrefConstant.FULL_NAME, "")
-            }
-            fullNameTv.text = fullName
-        }
-
     private fun bindViews() {
-        fullNameTv = findViewById(R.id.fullNameTV)
         floatingActionButton = findViewById(R.id.fab)
         notesRv = findViewById(R.id.notesRV)
     }
 
     private fun setupSharedPref() {
         sharedPreferences = getSharedPreferences(PrefConstant.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-    }
-
-    private fun setupDialogBox() {
-        val view = LayoutInflater.from(this@MyNotesActivity).inflate(R.layout.add_notes, null)
-        val titleEditText = view.findViewById<EditText>(R.id.titleAddNoteEditText)
-        val descriptionEditText = view.findViewById<EditText>(R.id.descriptionAddNoteEditText)
-        val submitButton = view.findViewById<Button>(R.id.submitButton)
-        val alertDialog = AlertDialog.Builder(this)
-                .setView(view)
-                .create()
-        alertDialog.show()
-
-        submitButton.setOnClickListener {
-            val title = titleEditText.text.toString()
-            val description = descriptionEditText.text.toString()
-            if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(description)) {
-                val notes = Notes(title = title, description = description)
-                notesList.add(notes)
-                notesRv.adapter?.notifyItemChanged( notesList.size - 1)
-                addNotesToDB(notes)
-
-            } else Toast.makeText(this@MyNotesActivity, "Title and Description can't be empty", Toast.LENGTH_SHORT).show()
-            alertDialog.hide()
-
-        }
     }
 
     private fun getDatafromDB() {
@@ -133,6 +109,7 @@ class MyNotesActivity : AppCompatActivity() {
                 val intent = Intent(this@MyNotesActivity, DetailActivity::class.java)
                 intent.putExtra(AppConstants.TITLE, notes!!.title)
                 intent.putExtra(AppConstants.DESCRIPTION, notes.description)
+                intent.putExtra(AppConstants.IMAGE_PATH,notes.imagePath)
                 startActivity(intent)
             }
 
@@ -147,7 +124,6 @@ class MyNotesActivity : AppCompatActivity() {
         linearLayoutManager.orientation = RecyclerView.VERTICAL
         notesRv!!.layoutManager = linearLayoutManager
         notesRv!!.adapter = notesAdapter
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -174,8 +150,19 @@ class MyNotesActivity : AppCompatActivity() {
         if(item.itemId == R.id.blogs){
             val intent = Intent(this, BlogActivity::class.java)
             startActivity(intent)
+        }else if(item.itemId == R.id.logout){
+            logout()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun logout() {
+        val editor: SharedPreferences.Editor
+        editor = sharedPreferences.edit()
+        editor.putBoolean(PrefConstant.IS_LOGGED_IN, false)
+        editor.apply()
+
+        startActivity(Intent(this@MyNotesActivity, LoginActivity::class.java))
     }
 
 }

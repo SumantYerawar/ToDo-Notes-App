@@ -30,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
             val userName = usernameEditText!!.text.toString()
             if (!TextUtils.isEmpty(fullName) && !TextUtils.isEmpty(userName)) {
                 val intent = Intent(applicationContext, MyNotesActivity::class.java)
-                intent.putExtra(AppConstants.Full_Name, fullName)
+                intent.putExtra(AppConstants.FULL_NAME, fullName)
                 startActivity(intent)
                 saveLoginStatus()
                 saveFullName(fullName)
