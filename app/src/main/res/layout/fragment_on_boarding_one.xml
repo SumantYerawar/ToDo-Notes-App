@@ -31,8 +31,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Todo can be added with one tap.\nNo complication work is needed"
+        android:text="Todo can be added with one tap."
         android:textColor="@color/colorAccent"
+        android:gravity="center"
         android:textSize="20sp"
         android:layout_marginHorizontal="10dp"
         android:padding="8dp"

@@ -3,16 +3,12 @@ package com.sumant.todonotesapp.view
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.opengl.Visibility
 import android.os.Bundle
-import android.text.TextUtils
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.*
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.Constraints
@@ -20,15 +16,16 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.sumant.todonotesapp.NotesApp
-import com.sumant.todonotesapp.utils.AppConstants
-import com.sumant.todonotesapp.utils.PrefConstant
 import com.sumant.todonotesapp.R
 import com.sumant.todonotesapp.adapter.NotesAdapter
 import com.sumant.todonotesapp.clickListener.ItemClickListener
 import com.sumant.todonotesapp.db.Notes
+import com.sumant.todonotesapp.utils.AppConstants
+import com.sumant.todonotesapp.utils.PrefConstant
 import com.sumant.todonotesapp.workManager.MyWorker
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 class MyNotesActivity : AppCompatActivity() {
 
@@ -39,6 +36,7 @@ class MyNotesActivity : AppCompatActivity() {
     var notesList = ArrayList<Notes>()
 
     private val ADD_NOTES_CODE = 100
+    private var back_pressed: Long = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -163,6 +161,18 @@ class MyNotesActivity : AppCompatActivity() {
         editor.apply()
 
         startActivity(Intent(this@MyNotesActivity, LoginActivity::class.java))
+    }
+
+    override fun onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed()
+            finish()
+            ActivityCompat.finishAffinity(this)
+            exitProcess(0)
+        } else {
+            Toast.makeText(baseContext, "Press once again to exit", Toast.LENGTH_SHORT).show()
+            back_pressed = System.currentTimeMillis()
+        }
     }
 
 }
