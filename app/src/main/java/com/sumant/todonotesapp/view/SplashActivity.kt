@@ -28,13 +28,7 @@ class SplashActivity : AppCompatActivity() {
                     if (!task.isSuccessful) {
                         return@OnCompleteListener
                     }
-
-                    // Get new Instance ID token
                     val token = task.result?.token
-
-                    // Log and toast
-                    //val msg = getString(R.string.msg_token_fmt, token)
-                    //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                 })
     }
 
